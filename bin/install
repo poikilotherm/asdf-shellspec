@@ -8,7 +8,7 @@ TMPDIR=${TMPDIR:-/tmp}
 [ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
 [ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
 
-install_grype() {
+install_shellspec() {
 	#local install_type="$1"
 	local version="$2"
   local install_path="$3"
@@ -23,8 +23,9 @@ install_grype() {
 	mkdir -p "${bin_install_path}"
 	echo "Downloading and extracting ShellSpec from ${download_url}"
 	curl -sS -L "$download_url" | tar -xz -C "$tmp_path"
-  mv "$tmp_path/shellspec/*" "$bin_install_path"
+  mv "$tmp_path"/shellspec/* "$bin_install_path"
 	chmod +x "$bin_path"
+	rm -rf "$tmp_path"
 }
 
 # get_arch() {
@@ -36,4 +37,4 @@ get_download_url() {
 	echo "https://github.com/shellspec/shellspec/releases/download/${version}/shellspec-dist.tar.gz"
 }
 
-install_grype "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
+install_shellspec "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
