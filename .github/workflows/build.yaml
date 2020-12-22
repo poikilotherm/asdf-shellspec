@@ -19,7 +19,7 @@ jobs:
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@1.0.0
       - name: Test asdf-vm plugin
-        uses: asdf-vm/actions/plugin-test@v1.0.1
+        uses: asdf-vm/actions/plugin-test@v1.1.0
         with:
           command: shellspec --version
         env:
