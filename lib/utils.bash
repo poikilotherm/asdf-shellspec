@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for shellspec.
 GH_REPO="https://github.com/shellspec/shellspec"
 
 fail() {
@@ -12,7 +11,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if shellspec is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
   curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -29,8 +27,6 @@ list_github_tags() {
 }
 
 list_all_versions() {
-  # TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-  # Change this function if shellspec has other means of determining installable versions.
   list_github_tags
 }
 
@@ -39,8 +35,7 @@ download_release() {
   version="$1"
   filename="$2"
 
-  # TODO: Adapt the release URL convention for shellspec
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  url="${GH_REPO}/releases/download/${version}/shellspec-dist.tar.gz"
 
   echo "* Downloading shellspec release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -55,15 +50,13 @@ install_version() {
     fail "asdf-shellspec supports release installs only"
   fi
 
-  # TODO: Adapt this to proper extension and adapt extracting strategy.
   local release_file="$install_path/shellspec-$version.tar.gz"
   (
     mkdir -p "$install_path"
     download_release "$version" "$release_file"
     tar -xzf "$release_file" -C "$install_path" --strip-components=1 || fail "Could not extract $release_file"
     rm "$release_file"
-
-    # TODO: Asert shellspec executable exists.
+    
     local tool_cmd
     tool_cmd="$(echo "shellspec --version" | cut -d' ' -f2-)"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
