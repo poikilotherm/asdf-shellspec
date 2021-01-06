@@ -52,13 +52,13 @@ install_version() {
 
   local release_file="$install_path/shellspec-$version.tar.gz"
   (
-    mkdir -p "$install_path"
+    mkdir -p "$install_path/bin"
     download_release "$version" "$release_file"
-    tar -xzf "$release_file" -C "$install_path" --strip-components=1 || fail "Could not extract $release_file"
+    tar -xzf "$release_file" -C "$install_path/bin" --strip-components=1 || fail "Could not extract $release_file"
     rm "$release_file"
-    
+
     local tool_cmd
-    tool_cmd="$(echo "shellspec --version" | cut -d' ' -f2-)"
+    tool_cmd="$(echo "shellspec --version" | cut -d' ' -f1)"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
     echo "shellspec $version installation was successful!"
